@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambrian Farm & Feed | Grain & Livestock Feed | Ste. Anne, MB</title>
+    <style>
+        :root {
+            --green: #2e7d32;
+            --darkgreen: #1b5e20;
+            --accent: #f5a623;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f5f0;
+        }
+        header {
+            background: var(--green);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+        .logo {
+            font-size: 1.55rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://i.supaimg.com/695397a7-6bc6-4524-80d0-a5973ff7d3d0/3c6fbceb-73d5-4b0a-90f4-1b7ab99d8c76.jpg') center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 100px 20px 80px;
+        }
+        .hero h1 { 
+            font-size: 2.8rem; 
+            margin-bottom: 1rem; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.6); 
+        }
+        .hero p { 
+            font-size: 1.2rem; 
+            max-width: 700px; 
+            margin: 0 auto 2rem; 
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: #000;
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 1.05rem;
+        }
+        .btn:hover { background: #ffb74d; transform: translateY(-3px); }
+
+        section { 
+            padding: 60px 15px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        h2 { 
+            text-align: center; 
+            font-size: 2.2rem; 
+            margin-bottom: 2.5rem; 
+            color: var(--darkgreen); 
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .product-card:hover { transform: translateY(-8px); }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info { 
+            padding: 1.25rem; 
+        }
+        .product-info h3 { 
+            margin-bottom: 0.5rem; 
+            color: var(--darkgreen); 
+            font-size: 1.3rem;
+        }
+        .size-options {
+            font-size: 0.95rem;
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        .add-to-cart {
+            width: 100%;
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 8px;
+            font-size: 1rem;
+        }
+        .tote-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            align-items: center;
+        }
+        .tote-input input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .tote-input button {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* ==================== IMPROVED CART STYLES ==================== */
+        .cart-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--green);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.05rem;
+        }
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 460px;
+            height: 100%;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.2);
+            transition: right 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            z-index: 300;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-sidebar.open { right: 0; }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .cart-header h2 {
+            font-size: 1.5rem;
+            color: var(--darkgreen);
+        }
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0 10px;
+            color: #666;
+        }
+
+        .cart-items-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 16px;
+            background: #f8f8f8;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .cart-item img {
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .cart-item-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item-details h4 {
+            font-size: 1.1rem;
+            color: var(--darkgreen);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .cart-item-details .unit-price {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .quantity-wrapper {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 9999px;
+            padding: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .quantity-wrapper button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f0f0f0;
+            color: var(--darkgreen);
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quantity-wrapper button:hover {
+            background: var(--green);
+            color: white;
+        }
+        .quantity-wrapper input {
+            width: 52px;
+            text-align: center;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            outline: none;
+        }
+        .cart-item-total {
+            text-align: right;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--darkgreen);
+            min-width: 80px;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(255,59,48,0.3);
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f8f0;
+            border-radius: 12px;
+        }
+        .cart-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: right;
+            color: var(--darkgreen);
+        }
+        .cart-total-label {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .cart-actions button {
+            flex: 1;
+            padding: 16px;
+            font-size: 1.05rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-continue {
+            background: #ddd;
+            color: #333;
+        }
+        .btn-clear {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        .empty-cart h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--darkgreen);
+        }
+
+        .payment-info {
+            background: #f0f8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            color: var(--darkgreen);
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--darkgreen);
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        /* Price disclaimer in products */
+        .price-disclaimer {
+            text-align: center;
+            background: #fff3cd;
+            color: #856404;
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">🌾 Cambrian Farm & Feed</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Shop</a></li>
+                <li><a href="#bulk">Bulk</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <h1>Premium Grain & Livestock Feed</h1>
+        <p>Locally grown in Ste. Anne, Manitoba — Oats, Barley, Corn, Sunflowers & more.</p>
+        <a href="#products" class="btn">Browse Products</a>
+    </section>
+
+    <section id="products">
+        <h2>Our Products</h2>
+        <p class="price-disclaimer">
+            ⚠️ <strong>All prices are subject to change without notice.</strong> Please call (204) 793-7661 or email for current pricing and availability.
+        </p>
+        <div class="products">
+
+            <!-- Whole Oats -->
+            <div class="product-card">
+                <img src="https://files.oaiusercontent.com/file-IyT6W?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008768" alt="Whole Oats">
+                <div class="product-info">
+                    <h3>Whole Oats</h3>
+                    <p>Clean high-quality oats ideal for horses, cattle, and custom mixes.</p>
+                    <div class="size-options">
+                        • 45 lb bag — $10.00<br>
+                        • 55 gal barrel — $50<br>
+                        • Custom tote — 19¢ per lb (min 500 lb)
+                    </div>
+                    <button class="add-to-cart" data-name="Whole Oats - 45 lb Bag" data-price="10.00" data-img="https://files.oaiusercontent.com/file-IyT6W?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008768">Add 45 lb Bag to Cart</button>
+                    <button class="add-to-cart" data-name="Whole Oats - 55 gal Barrel" data-price="50.00" data-img="https://files.oaiusercontent.com/file-IyT6W?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008768">Add 55 gal Barrel to Cart</button>
+                    <div class="tote-input">
+                        <input type="number" id="tote-oats" min="500" value="2000" placeholder="Pounds (min 500)">
+                        <button onclick="addCustomTote('Whole Oats', 0.19, document.getElementById('tote-oats').value)">Add Custom Tote</button>
+                    </div>
+                    <p style="font-size:0.85rem; color:#555; margin-top:8px;"><strong>Tote bag $10 or will exchange</strong><br><em>Please order before pickup to ensure availability</em></p>
+                </div>
+            </div>
+
+            <!-- Rolled Barley -->
+            <div class="product-card">
+                <img src="https://files.oaiusercontent.com/file-IyT6W?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008768" alt="Rolled Barley">
+                <div class="product-info">
+                    <h3>Rolled Barley</h3>
+                    <p>High-energy rolled barley excellent for cattle and horses.</p>
+                    <div class="size-options">
+                        • 45 lb bag — $11.00<br>
+                        • 55 gal barrel — $45<br>
+                        • Custom tote — 16¢ per lb (min 500 lb)
+                    </div>
+                    <button class="add-to-cart" data-name="Rolled Barley - 45 lb Bag" data-price="11.00" data-img="https://files.oaiusercontent.com/file-IyT6W?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008768">Add 45 lb Bag to Cart</button>
+                    <button class="add-to-cart" data-name="Rolled Barley - 55 gal Barrel" data-price="45.00" data-img="https://files.oaiusercontent.com/file-IyT6W?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008768">Add 55 gal Barrel to Cart</button>
+                    <div class="tote-input">
+                        <input type="number" id="tote-barley" min="500" value="2000" placeholder="Pounds (min 500)">
+                        <button onclick="addCustomTote('Rolled Barley', 0.16, document.getElementById('tote-barley').value)">Add Custom Tote</button>
+                    </div>
+                    <p style="font-size:0.85rem; color:#555; margin-top:8px;"><strong>Tote bag $10 or will exchange</strong><br><em>Please order before pickup to ensure availability</em></p>
+                </div>
+            </div>
+
+            <!-- Whole Corn -->
+            <div class="product-card">
+                <img src="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769" alt="Whole Corn">
+                <div class="product-info">
+                    <h3>Whole Corn</h3>
+                    <p>Premium whole corn for livestock, poultry, and wildlife.</p>
+                    <div class="size-options">
+                        • 45 lb bag — $10.00<br>
+                        • 55 gal barrel — $50<br>
+                        • Custom tote — 14¢ per lb (min 500 lb)
+                    </div>
+                    <button class="add-to-cart" data-name="Whole Corn - 45 lb Bag" data-price="10.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 45 lb Bag to Cart</button>
+                    <button class="add-to-cart" data-name="Whole Corn - 55 gal Barrel" data-price="50.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 55 gal Barrel to Cart</button>
+                    <div class="tote-input">
+                        <input type="number" id="tote-whole-corn" min="500" value="2000" placeholder="Pounds (min 500)">
+                        <button onclick="addCustomTote('Whole Corn', 0.14, document.getElementById('tote-whole-corn').value)">Add Custom Tote</button>
+                    </div>
+                    <p style="font-size:0.85rem; color:#555; margin-top:8px;"><strong>Tote bag $10 or will exchange</strong><br><em>Please order before pickup to ensure availability</em></p>
+                </div>
+            </div>
+
+            <!-- Rolled Corn -->
+            <div class="product-card">
+                <img src="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769" alt="Rolled Corn">
+                <div class="product-info">
+                    <h3>Rolled Corn</h3>
+                    <p>Rolled corn for improved digestibility in livestock and poultry rations.</p>
+                    <div class="size-options">
+                        • 45 lb bag — $11.00<br>
+                        • 55 gal barrel — $55<br>
+                        • Custom tote — 15.5¢ per lb (min 500 lb)
+                    </div>
+                    <button class="add-to-cart" data-name="Rolled Corn - 45 lb Bag" data-price="11.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 45 lb Bag to Cart</button>
+                    <button class="add-to-cart" data-name="Rolled Corn - 55 gal Barrel" data-price="55.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 55 gal Barrel to Cart</button>
+                    <div class="tote-input">
+                        <input type="number" id="tote-rolled-corn" min="500" value="2000" placeholder="Pounds (min 500)">
+                        <button onclick="addCustomTote('Rolled Corn', 0.155, document.getElementById('tote-rolled-corn').value)">Add Custom Tote</button>
+                    </div>
+                    <p style="font-size:0.85rem; color:#555; margin-top:8px;"><strong>Tote bag $10 or will exchange</strong><br><em>Please order before pickup to ensure availability</em></p>
+                </div>
+            </div>
+
+            <!-- Corn/Oats/Sunflower Blend -->
+            <div class="product-card">
+                <img src="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769" alt="Corn/Oats/Sunflower Blend">
+                <div class="product-info">
+                    <h3>Corn/Oats/Sunflower Blend</h3>
+                    <p>Popular high-energy blend with corn, oats, and sunflower seeds.</p>
+                    <div class="size-options">
+                        • 45 lb bag — $13.00<br>
+                        • 55 gal barrel — $65<br>
+                        • Custom tote — 17¢ per lb (min 500 lb)
+                    </div>
+                    <button class="add-to-cart" data-name="Corn/Oats/Sunflower Blend - 45 lb Bag" data-price="13.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 45 lb Bag to Cart</button>
+                    <button class="add-to-cart" data-name="Corn/Oats/Sunflower Blend - 55 gal Barrel" data-price="65.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 55 gal Barrel to Cart</button>
+                    <div class="tote-input">
+                        <input type="number" id="tote-corn-oats-sunflower" min="500" value="2000" placeholder="Pounds (min 500)">
+                        <button onclick="addCustomTote('Corn/Oats/Sunflower Blend', 0.17, document.getElementById('tote-corn-oats-sunflower').value)">Add Custom Tote</button>
+                    </div>
+                    <p style="font-size:0.85rem; color:#555; margin-top:8px;"><strong>Tote bag $10 or will exchange</strong><br><em>Please order before pickup to ensure availability</em></p>
+                </div>
+            </div>
+
+            <!-- Corn/Oats/Wheat/Sunflower Blend -->
+            <div class="product-card">
+                <img src="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769" alt="Corn/Oats/Wheat/Sunflower Blend">
+                <div class="product-info">
+                    <h3>Corn/Oats/Wheat/Sunflower Blend</h3>
+                    <p>Balanced mix with corn, oats, wheat, and sunflower.</p>
+                    <div class="size-options">
+                        • 45 lb bag — $14.00<br>
+                        • 55 gal barrel — $70<br>
+                        • Custom tote — 19¢ per lb (min 500 lb)
+                    </div>
+                    <button class="add-to-cart" data-name="Corn/Oats/Wheat/Sunflower Blend - 45 lb Bag" data-price="14.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 45 lb Bag to Cart</button>
+                    <button class="add-to-cart" data-name="Corn/Oats/Wheat/Sunflower Blend - 55 gal Barrel" data-price="70.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 55 gal Barrel to Cart</button>
+                    <div class="tote-input">
+                        <input type="number" id="tote-corn-oats-wheat" min="500" value="2000" placeholder="Pounds (min 500)">
+                        <button onclick="addCustomTote('Corn/Oats/Wheat/Sunflower Blend', 0.19, document.getElementById('tote-corn-oats-wheat').value)">Add Custom Tote</button>
+                    </div>
+                    <p style="font-size:0.85rem; color:#555; margin-top:8px;"><strong>Tote bag $10 or will exchange</strong><br><em>Please order before pickup to ensure availability</em></p>
+                </div>
+            </div>
+
+            <!-- Corn/Oats Mix -->
+            <div class="product-card">
+                <img src="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769" alt="Corn/Oats Mix">
+                <div class="product-info">
+                    <h3>Corn/Oats Mix</h3>
+                    <p>Simple and effective corn and oats blend for general livestock use.</p>
+                    <div class="size-options">
+                        • 45 lb bag — $12.00<br>
+                        • 55 gal barrel — $60<br>
+                        • Custom tote — 16.5¢ per lb (min 500 lb)
+                    </div>
+                    <button class="add-to-cart" data-name="Corn/Oats Mix - 45 lb Bag" data-price="12.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 45 lb Bag to Cart</button>
+                    <button class="add-to-cart" data-name="Corn/Oats Mix - 55 gal Barrel" data-price="60.00" data-img="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769">Add 55 gal Barrel to Cart</button>
+                    <div class="tote-input">
+                        <input type="number" id="tote-corn-oats-mix" min="500" value="2000" placeholder="Pounds (min 500)">
+                        <button onclick="addCustomTote('Corn/Oats Mix', 0.165, document.getElementById('tote-corn-oats-mix').value)">Add Custom Tote</button>
+                    </div>
+                    <p style="font-size:0.85rem; color:#555; margin-top:8px;"><strong>Tote bag $10 or will exchange</strong><br><em>Please order before pickup to ensure availability</em></p>
+                </div>
+            </div>
+
+            <!-- Sunflower Seeds -->
+            <div class="product-card">
+                <img src="https://files.oaiusercontent.com/file-mxIBt?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008769" alt="Sunflower Seeds">
+                <div class="product-info">
+                    <h3>Sunflower Seeds</h3>
+                    <p>Excellent high-energy seeds for wildlife, birds, and livestock feed.</p>
+                    <div class="size-options">
+                        • 45 lb bag — Please call or text for current price
+                    </div>
+                    <button onclick="sunflowerPriceRequest()" class="add-to-cart" style="background:#d32f2f;">Call or Text for Price</button>
+                    <p style="color:#d32f2f; font-weight:600; margin:12px 0 8px;">Price available on request — call or text (204) 793-7661</p>
+                    <p style="font-size:0.85rem; color:#555;"><em>Please order before pickup to ensure availability</em></p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="bulk" style="background:#fff;">
+        <h2>Bulk Orders & Pickup</h2>
+        <img src="https://i.supaimg.com/695397a7-6bc6-4524-80d0-a5973ff7d3d0/ecb063e3-5135-42b0-8996-9dd59e6f29c9.jpg" 
+             alt="Bulk Grain & Feed Storage" 
+             style="width:100%; max-height:400px; object-fit:cover; border-radius:12px; margin-bottom:2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+
+        <div class="bulk-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.8rem;">
+            <div class="bulk-card" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 1.25rem;">
+                <img src="https://files.oaiusercontent.com/file-8T2bv?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008773" alt="2000 lb Totes" style="width:100%; height:200px; object-fit:cover; border-radius:8px;">
+                <div class="bulk-info">
+                    <h3>2000 lb Totes</h3>
+                    <p>Perfect for larger farms. Tote bags are $10 or will exchange.</p>
+                    <div class="price">Contact for current pricing</div>
+                    <p style="font-size:0.95rem; color:#d32f2f; margin-top:10px;"><strong>Please order before pickup to ensure availability</strong></p>
+                    <button class="add-to-cart" data-name="2000 lb Tote Quote" data-price="0" data-img="https://files.oaiusercontent.com/file-8T2bv?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008773">Request Tote Quote</button>
+                </div>
+            </div>
+
+            <div class="bulk-card" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 1.25rem;">
+                <img src="https://files.oaiusercontent.com/file-9aQwA?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008605" alt="55 Gallon Barrels" style="width:100%; height:200px; object-fit:cover; border-radius:8px;">
+                <div class="bulk-info">
+                    <h3>55 Gallon Barrels</h3>
+                    <p>Convenient for medium-volume users.</p>
+                    <div class="price">Contact for pricing</div>
+                    <p style="font-size:0.95rem; color:#d32f2f; margin-top:10px;"><strong>Please order before pickup to ensure availability</strong></p>
+                    <button class="add-to-cart" data-name="55 Gallon Barrel Quote" data-price="0" data-img="https://files.oaiusercontent.com/file-9aQwA?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008605">Request Barrel Quote</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" style="background: #fff; text-align: center;">
+        <h2>About Cambrian Farm & Feed</h2>
+        <img src="https://files.oaiusercontent.com/file-9aQwA?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008605" alt="Farm Storage" style="width:100%; max-height:400px; object-fit:cover; border-radius:12px; margin-bottom:2rem;">
+        <p style="max-width: 800px; margin: 0 auto 2rem; font-size: 1.15rem;">
+            Family-owned in Ste. Anne, Manitoba. We grow and supply fresh oats, barley, corn, sunflower seeds, blends, and more 
+            in 45 lb bags, 55 gallon barrels, and custom totes. Pickup only — please order ahead to ensure availability.
+        </p>
+    </section>
+
+    <section id="contact" style="background: #f8f5f0;">
+        <h2>Contact Us</h2>
+        <div class="contact-form">
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="(204) 793-7661">
+                </div>
+                <div class="form-group">
+                    <label for="product">Interested In</label>
+                    <select id="product">
+                        <option value="">General Inquiry</option>
+                        <option value="Whole Oats">Whole Oats</option>
+                        <option value="Rolled Barley">Rolled Barley</option>
+                        <option value="Whole Corn">Whole Corn</option>
+                        <option value="Rolled Corn">Rolled Corn</option>
+                        <option value="Corn/Oats/Sunflower Blend">Corn/Oats/Sunflower Blend</option>
+                        <option value="Corn/Oats/Wheat/Sunflower Blend">Corn/Oats/Wheat/Sunflower Blend</option>
+                        <option value="Corn/Oats Mix">Corn/Oats Mix</option>
+                        <option value="Sunflower Seeds">Sunflower Seeds</option>
+                        <option value="Bulk Totes">Bulk 2000 lb Totes</option>
+                        <option value="Barrels">55 Gallon Barrels</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message / Order Details *</label>
+                    <textarea id="message" rows="6" placeholder="Tell us about your order, pickup needs, or any questions..." required></textarea>
+                </div>
+                <button type="submit" class="btn" style="width:100%; padding:16px; font-size:1.1rem;">Send Message</button>
+            </form>
+            <div id="successMessage" class="success-message">
+                ✅ Thank you! Your message has been received. We'll reply to <strong>dyschreyer@hotmail.com</strong> shortly.
+            </div>
+        </div>
+
+        <p style="text-align:center; margin-top:40px; font-size:1.15rem;">
+            📍 46063 Municipal Road 38 East, Ste. Anne, Manitoba<br>
+            📞 <a href="tel:12047937661" style="color:var(--green); text-decoration:none;">(204) 793-7661</a><br>
+            ✉️ <a href="mailto:dyschreyer@hotmail.com" style="color:var(--green); text-decoration:none;">dyschreyer@hotmail.com</a>
+        </p>
+    </section>
+
+    <!-- Cart Icon -->
+    <div class="cart-icon" id="cart-icon">
+        🛒 Cart (<span id="cart-count">0</span>)
+    </div>
+
+    <!-- ==================== FIXED CART SIDEBAR ==================== -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Your Cart <span id="cart-count-header" style="font-size:1rem; font-weight:normal; color:#666;">(0 items)</span></h2>
+            <button class="close-cart" id="close-cart">✕</button>
+        </div>
+
+        <div class="cart-items-container" id="cart-items">
+            <!-- Populated by JavaScript -->
+        </div>
+
+        <div id="cart-empty" class="empty-cart" style="display:none;">
+            <h3>Your cart is empty</h3>
+            <p style="margin-bottom:24px;">Looks like you haven't added any feed yet.<br>Let's get some great local grain!</p>
+            <button onclick="closeCart(); document.getElementById('products').scrollIntoView({ behavior: 'smooth' });" 
+                    class="btn" style="width:100%; background:var(--green); color:white;">
+                Browse Products
+            </button>
+        </div>
+
+        <div id="cart-summary" class="cart-summary" style="display:none;">
+            <div class="payment-info">
+                <strong>Payment Options:</strong><br>
+                • eTransfer to: dyschreyer@hotmail.com<br>
+                • Cash on pickup<br>
+                <strong style="color:#d32f2f;">Pickup only • Ste. Anne, MB</strong>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span class="cart-total-label">Subtotal</span>
+                <span id="cart-subtotal" class="cart-total" style="font-size:1.35rem;">$0.00</span>
+            </div>
+            
+            <p style="font-size:0.9rem; color:#d32f2f; text-align:right; margin-top:8px;">
+                ⚠️ All prices subject to change • Call to confirm
+            </p>
+
+            <div class="cart-actions">
+                <button onclick="closeCart()" class="btn-continue">Continue Shopping</button>
+                <!-- FIXED: Clear Cart button now uses ID + event listener for 100% reliable clearing -->
+                <button id="clear-cart-btn" class="btn-clear">
+                    🗑️ Clear Cart
+                </button>
+            </div>
+
+            <button onclick="emailQuote()" class="btn" style="width:100%; margin-top:12px; padding:18px; font-size:1.15rem; background:var(--green); color:white;">
+                📧 Email Quote to dyschreyer@hotmail.com
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Cambrian Farm & Feed • 46063 Municipal Road 38 East, Ste. Anne, Manitoba</p>
+        <p>Quality Locally Grown Grain & Feed • (204) 793-7661 • <a href="mailto:dyschreyer@hotmail.com" style="color:white;">dyschreyer@hotmail.com</a></p>
+        <p style="margin-top:10px; font-size:0.95rem;">
+            <strong>Payment accepted:</strong> eTransfer to dyschreyer@hotmail.com or Cash on pickup
+        </p>
+        <p style="text-align:center; color:#666; font-size:0.9rem; margin-top:15px; font-style:italic;">
+            * All prices are subject to change without notice. Please call or email to confirm current pricing and availability.
+        </p>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const emptyState = document.getElementById('cart-empty');
+            const summary = document.getElementById('cart-summary');
+            const countEl = document.getElementById('cart-count');
+            const countHeaderEl = document.getElementById('cart-count-header');
+            
+            container.innerHTML = '';
+            let subtotal = 0;
+
+            if (cart.length === 0) {
+                emptyState.style.display = 'block';
+                summary.style.display = 'none';
+                countEl.textContent = '0';
+                countHeaderEl.textContent = '(0 items)';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            summary.style.display = 'block';
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="\( {item.img}" alt=" \){item.name}">
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+                        <div class="unit-price">\[ {parseFloat(item.price).toFixed(2)} each</div>
+                        
+                        <div class="cart-item-controls">
+                            <div class="quantity-wrapper">
+                                <button onclick="changeQuantity(${index}, -1)">–</button>
+                                <input type="number" value="${item.quantity}" 
+                                       onchange="updateQuantity(${index}, this.value)" 
+                                       min="1">
+                                <button onclick="changeQuantity(${index}, 1)">+</button>
+                            </div>
+                            <div class="cart-item-total"> \]{itemTotal.toFixed(2)}</div>
+                        </div>
+                    </div>
+                    <button onclick="removeFromCart(${index})" class="remove-btn">🗑</button>
+                `;
+                container.appendChild(div);
+            });
+
+            countEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            countHeaderEl.textContent = `(${cart.reduce((sum, item) => sum + item.quantity, 0)} items)`;
+            document.getElementById('cart-subtotal').textContent = '$' + subtotal.toFixed(2);
+        }
+
+        function addToCart(name, price, img) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ name, price: parseFloat(price) || 0, img, quantity: 1 });
+            }
+            renderCart();
+            openCart();
+        }
+
+        function addCustomTote(productName, pricePerLb, poundsStr) {
+            const pounds = parseFloat(poundsStr);
+            if (!pounds || pounds < 500) {
+                alert("Please enter at least 500 pounds for a custom tote.");
+                return;
+            }
+            const totalPrice = parseFloat((pounds * pricePerLb).toFixed(2));
+            const name = `\( {productName} - Custom Tote ( \){pounds} lbs)`;
+            addToCart(name, totalPrice, "https://files.oaiusercontent.com/file-8T2bv?se=2026-04-01T00%3A00%3A00Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D3628800%2C%20immutable&rscd=attachment%3B%20filename%3D1000008773");
+        }
+
+        function sunflowerPriceRequest() {
+            alert("Please call or text (204) 793-7661 for current Sunflower Seeds pricing.");
+        }
+
+        function changeQuantity(index, change) {
+            cart[index].quantity += change;
+            if (cart[index].quantity < 1) cart.splice(index, 1);
+            renderCart();
+        }
+
+        function updateQuantity(index, newQty) {
+            const qty = parseInt(newQty);
+            if (qty < 1) {
+                cart.splice(index, 1);
+            } else {
+                cart[index].quantity = qty;
+            }
+            renderCart();
+        }
+
+        function removeFromCart(index) {
+            if (confirm("Remove this item from your cart?")) {
+                cart.splice(index, 1);
+                renderCart();
+            }
+        }
+
+        function clearCart() {
+            if (confirm("🗑️ Clear the entire cart? This cannot be undone.")) {
+                cart = [];
+                renderCart();
+                closeCart();   // ← Auto-close after clearing (better UX)
+            }
+        }
+
+        function openCart() {
+            document.getElementById('cart-sidebar').classList.add('open');
+        }
+
+        function closeCart() {
+            document.getElementById('cart-sidebar').classList.remove('open');
+        }
+
+        function emailQuote() {
+            if (cart.length === 0) {
+                alert("Your cart is empty.");
+                return;
+            }
+            const subtotal = document.getElementById('cart-subtotal').textContent;
+            let body = "Hello,\n\nI'd like a quote for the following items:\n\n";
+            cart.forEach(item => {
+                body += `• ${item.quantity} × ${item.name} — $${(item.price * item.quantity).toFixed(2)}\n`;
+            });
+            body += `\nSubtotal: ${subtotal}\n\nPayment: eTransfer to dyschreyer@hotmail.com or Cash on pickup\n\nPlease reply with availability, final pricing, and pickup options.\nThank you!`;
+
+            const mailtoLink = `mailto:dyschreyer@hotmail.com?subject=Cambrian Farm & Feed Quote Request&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+            closeCart();
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (name && email && message) {
+                document.getElementById('successMessage').style.display = 'block';
+                this.reset();
+                setTimeout(() => {
+                    document.getElementById('successMessage').style.display = 'none';
+                }, 8000);
+            }
+        });
+
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const name = btn.getAttribute('data-name');
+                const price = btn.getAttribute('data-price');
+                const img = btn.getAttribute('data-img');
+                if (name && price !== null) {
+                    addToCart(name, price, img);
+                }
+            });
+        });
+
+        document.getElementById('cart-icon').addEventListener('click', openCart);
+        document.getElementById('close-cart').addEventListener('click', closeCart);
+
+        // FIXED: Clear Cart button now uses a proper event listener (more reliable than inline onclick)
+        document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Close cart when clicking outside
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('cart-sidebar');
+            const icon = document.getElementById('cart-icon');
+            if (!sidebar.contains(e.target) && !icon.contains(e.target) && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
+        });
+
+        // Initial render
+        renderCart();
+    </script>
+</body>
+</html>
